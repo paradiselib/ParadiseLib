@@ -1,6 +1,6 @@
-local Core = {}
+local UI = loadstring(game:HttpGet("https://raw.githubusercontent.com/paradiselib/ParadiseLib/main/ui.lua"))()
 
-function Core:FindScript(name)
+local function FindScript(name)
     local function searchInInstance(instance)
         for _, child in ipairs(instance:GetDescendants()) do
             if child:IsA("LuaSourceContainer") and child.Name == name then
@@ -30,7 +30,7 @@ function Core:FindScript(name)
     return nil
 end
 
-function Core:Decompile(scriptInstance)
+local function Decompile(scriptInstance)
     local success, result = pcall(function()
         if not scriptInstance then
             return "Error: Script not found"
@@ -70,4 +70,33 @@ function Core:Decompile(scriptInstance)
     end
 end
 
-return Core
+local elements = UI:Create()
+
+elements.DecompileButton.MouseButton1Click:Connect(function()
+    local scriptName = elements.InputBox.Text
+    
+    if scriptName == "" then
+        UI:SetOutput("Error: Please enter a script name", Color3.fromRGB(255, 100, 100))
+        return
+    end
+    
+    UI:SetOutput("Searching for script: " .. scriptName .. "...", Color3.fromRGB(255, 200, 100))
+    task.wait(0.1)
+    
+    local scriptInstance = FindScript(scriptName)
+    
+    if not scriptInstance then
+        UI:SetOutput("Error: Script '" .. scriptName .. "' not found in game", Color3.fromRGB(255, 100, 100))
+        return
+    end
+    
+    UI:SetOutput("Found script at: " .. scriptInstance:GetFullName() .. "\n\nDecompiling...", Color3.fromRGB(100, 255, 100))
+    task.wait(0.2)
+    
+    local decompiledCode = Decompile(scriptInstance)
+    UI:SetOutput("Script: " .. scriptInstance:GetFullName() .. "\n" .. string.rep("-", 50) .. "\n\n" .. decompiledCode, Color3.fromRGB(200, 200, 200))
+end)
+
+elements.CloseButton.MouseButton1Click:Connect(function()
+    elements.ScreenGui:Destroy()
+end)
