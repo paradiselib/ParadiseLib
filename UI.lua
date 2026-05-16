@@ -1,40 +1,73 @@
-local Allusive = loadstring(game:HttpGet("https://raw.githubusercontent.com/Kinlei/Allusive/main/src/main.lua"))()
+local Isotopia = loadstring(game:HttpGet("https://raw.githubusercontent.com/azurelw/isotopia/refs/heads/main/loader.lua"))()
 
 local UI = {}
 UI.Window = nil
 UI.Elements = {}
 
 function UI:Create()
-    self.Window = Allusive:CreateWindow({
-        Name = "Paradise Decompiler",
-        LoadingTitle = "Paradise",
-        LoadingSubtitle = "by Paradise Team",
-        ConfigurationSaving = {
-            Enabled = false
-        },
-        Discord = {
-            Enabled = false
-        },
-        KeySystem = false
+    self.Window = Isotopia:Window({
+        Title = "Paradise Decompiler",
+        Icon = "rbxassetid://107819132007001",
+        Transparent = false,
+        Size = UDim2.fromOffset(700, 500),
+        MainColor = Color3.fromRGB(180, 30, 30),
+        Spinning = true,
+        HideSearchBar = true,
+        Corner = 15,
+        AnimatedTitle = {
+            AnimationColor = Color3.fromRGB(220, 50, 50),
+            AnimationSide = "Left",
+            AnimationSpeed = 2
+        }
+    })
+    
+    self.Window:SetToggleKey(Enum.KeyCode.RightControl)
+
+    local DecompilerTab = self.Window:Tab({
+        Title = "Decompiler",
+        Icon = "lock-open"
+    })
+    
+    local SettingsTab = self.Window:Tab({
+        Title = "Settings",
+        Icon = "settings"
+    })
+    
+    local AboutTab = self.Window:Tab({
+        Title = "About",
+        Icon = "info"
     })
 
-    local DecompilerTab = self.Window:CreateTab("Decompiler", "rbxassetid://10734950309")
-    local SettingsTab = self.Window:CreateTab("Settings", "rbxassetid://10734923549")
-    local AboutTab = self.Window:CreateTab("About", "rbxassetid://10747373176")
+    local LeftSection = DecompilerTab:Section({
+        Side = "left"
+    })
+    
+    local RightSection = DecompilerTab:Section({
+        Side = "right"
+    })
 
-    local DecompilerSection = DecompilerTab:CreateSection("Bytecode Decompiler")
-
-    local InputBox = DecompilerTab:CreateInput({
-        Name = "Script Name",
-        PlaceholderText = "Enter script name...",
-        RemoveTextAfterFocusLost = false,
-        Callback = function(value)
-            self.Elements.ScriptName = value
+    local DecompilerModule = LeftSection:Module({
+        Title = "Bytecode Decompiler",
+        Desc = "Decompile any script by name",
+        Flag = "decompiler_module",
+        Locked = false,
+        Callback = function(state)
         end
     })
 
-    local DecompileButton = DecompilerTab:CreateButton({
-        Name = "Decompile Script",
+    DecompilerModule:Input({
+        Title = "Script Name",
+        placeholder = "Enter script name...",
+        Flag = "script_name_input",
+        Locked = false,
+        callback = function(text)
+            self.Elements.ScriptName = text
+        end
+    })
+
+    DecompilerModule:Button({
+        Title = "Decompile Script",
+        Locked = false,
         Callback = function()
             if self.Elements.OnDecompile then
                 self.Elements.OnDecompile()
@@ -42,85 +75,120 @@ function UI:Create()
         end
     })
 
-    local OutputSection = DecompilerTab:CreateSection("Output")
+    local OutputModule = RightSection:Module({
+        Title = "Output",
+        Desc = "Decompiled code will appear here",
+        Flag = "output_module",
+        Locked = false,
+        Callback = function(state)
+        end
+    })
 
-    local OutputParagraph = DecompilerTab:CreateParagraph({
+    OutputModule:Label({
+        Text = "Waiting for input...",
         Title = "Result",
-        Content = "Waiting for input..."
+        Description = "Enter a script name and click Decompile",
+        Default = true
     })
 
-    local SettingsSection = SettingsTab:CreateSection("Settings")
+    local SettingsSection = SettingsTab:Section({
+        Side = "left"
+    })
 
-    SettingsTab:CreateToggle({
-        Name = "Auto Copy to Clipboard",
-        CurrentValue = false,
-        Flag = "AutoCopy",
-        Callback = function(value)
-            self.Elements.AutoCopy = value
+    local SettingsModule = SettingsSection:Module({
+        Title = "Options",
+        Desc = "Configure decompiler settings",
+        Flag = "settings_module",
+        Locked = false,
+        Callback = function(state)
         end
     })
 
-    SettingsTab:CreateToggle({
-        Name = "Show Notifications",
-        CurrentValue = true,
-        Flag = "ShowNotifications",
-        Callback = function(value)
-            self.Elements.ShowNotifications = value
+    SettingsModule:Checkbox({
+        Title = "Auto Copy to Clipboard",
+        Flag = "auto_copy",
+        Locked = false,
+        Callback = function(state)
+            self.Elements.AutoCopy = state
         end
     })
 
-    local AboutSection = AboutTab:CreateSection("About Paradise")
-
-    AboutTab:CreateParagraph({
-        Title = "Paradise Decompiler v1.0",
-        Content = "Autonomous bytecode decompiler for Roblox\n\nFeatures:\n• Automatic script search\n• Multi-location scanning\n• Beautiful modern UI\n• Fast and reliable\n\nCreated by Paradise Team"
+    SettingsModule:Checkbox({
+        Title = "Show Notifications",
+        Flag = "show_notifications",
+        Locked = false,
+        Callback = function(state)
+            self.Elements.ShowNotifications = state
+        end
     })
 
-    AboutTab:CreateButton({
-        Name = "Join Discord",
+    SettingsModule:Checkbox({
+        Title = "Detailed Output",
+        Flag = "detailed_output",
+        Locked = false,
+        Callback = function(state)
+            self.Elements.DetailedOutput = state
+        end
+    })
+
+    local AboutSection = AboutTab:Section({
+        Side = "left"
+    })
+
+    AboutSection:Label({
+        Text = "Paradise Decompiler v1.0\n\nAutonomous bytecode decompiler for Roblox\n\nFeatures:\n• Automatic script search\n• Multi-location scanning\n• Beautiful modern UI\n• Fast and reliable\n\nCreated by Paradise Team",
+        Title = "About Paradise",
+        Description = "Professional decompiler tool",
+        Default = true
+    })
+
+    AboutSection:Button({
+        Title = "Join Discord",
+        Locked = false,
         Callback = function()
-            Allusive:Notify({
+            Isotopia:Notify({
                 Title = "Discord",
-                Content = "Discord link copied to clipboard!",
-                Duration = 3,
-                Image = "rbxassetid://10747372992"
+                Description = "Discord link copied to clipboard!",
+                Duration = 3
             })
         end
     })
 
-    self.Elements.InputBox = InputBox
-    self.Elements.OutputParagraph = OutputParagraph
+    self.Window:load()
+
     self.Elements.ScriptName = ""
     self.Elements.AutoCopy = false
     self.Elements.ShowNotifications = true
+    self.Elements.DetailedOutput = false
+    self.Elements.OutputModule = OutputModule
 
     return self.Elements
 end
 
 function UI:SetOutput(text, isError)
-    if self.Elements.OutputParagraph then
-        self.Elements.OutputParagraph:Set({
+    if self.Elements.OutputModule then
+        self.Elements.OutputModule:Label({
+            Text = text,
             Title = isError and "Error" or "Result",
-            Content = text
+            Description = isError and "Failed to decompile" or "Successfully decompiled",
+            Default = true
         })
     end
     
     if self.Elements.ShowNotifications then
-        Allusive:Notify({
+        Isotopia:Notify({
             Title = isError and "Error" or "Success",
-            Content = isError and "Failed to decompile script" or "Script decompiled successfully!",
-            Duration = 3,
-            Image = isError and "rbxassetid://10747384394" or "rbxassetid://10747372992"
+            Description = isError and "Failed to decompile script" or "Script decompiled successfully!",
+            Duration = 3
         })
     end
 end
 
-function UI:Notify(title, content, duration)
-    Allusive:Notify({
+function UI:Notify(title, description, duration)
+    Isotopia:Notify({
         Title = title,
-        Content = content,
-        Duration = duration or 3,
-        Image = "rbxassetid://10747372992"
+        Description = description,
+        Duration = duration or 3
     })
 end
 
