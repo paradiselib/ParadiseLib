@@ -18,9 +18,9 @@ function UI:Create()
         KeySystem = false
     })
 
-    local DecompilerTab = self.Window:CreateTab("🔓 Decompiler", "rbxassetid://4483345998")
-    local SettingsTab = self.Window:CreateTab("⚙️ Settings", "rbxassetid://4483345998")
-    local AboutTab = self.Window:CreateTab("ℹ️ About", "rbxassetid://4483345998")
+    local DecompilerTab = self.Window:CreateTab("Decompiler", "rbxassetid://10734950309")
+    local SettingsTab = self.Window:CreateTab("Settings", "rbxassetid://10734923549")
+    local AboutTab = self.Window:CreateTab("About", "rbxassetid://10747373176")
 
     local DecompilerSection = DecompilerTab:CreateSection("Bytecode Decompiler")
 
@@ -83,7 +83,7 @@ function UI:Create()
                 Title = "Discord",
                 Content = "Discord link copied to clipboard!",
                 Duration = 3,
-                Image = "rbxassetid://4483345998"
+                Image = "rbxassetid://10747372992"
             })
         end
     })
@@ -110,7 +110,7 @@ function UI:SetOutput(text, isError)
             Title = isError and "Error" or "Success",
             Content = isError and "Failed to decompile script" or "Script decompiled successfully!",
             Duration = 3,
-            Image = "rbxassetid://4483345998"
+            Image = isError and "rbxassetid://10747384394" or "rbxassetid://10747372992"
         })
     end
 end
@@ -120,7 +120,7 @@ function UI:Notify(title, content, duration)
         Title = title,
         Content = content,
         Duration = duration or 3,
-        Image = "rbxassetid://4483345998"
+        Image = "rbxassetid://10747372992"
     })
 end
 
