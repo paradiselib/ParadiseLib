@@ -1,9 +1,10 @@
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
-local GUI = {}
+local UI = {}
+UI.Elements = {}
 
-function GUI:CreateInterface()
+function UI:Create()
     local ScreenGui = Instance.new("ScreenGui")
     ScreenGui.Name = "ParadiseGUI"
     ScreenGui.ResetOnSpawn = false
@@ -175,33 +176,34 @@ function GUI:CreateInterface()
     MainFrame.Position = UDim2.new(0.5, -300, -0.5, 0)
     TweenService:Create(MainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, -300, 0.5, -250)}):Play()
 
-    GUI.InputBox = InputBox
-    GUI.DecompileButton = DecompileButton
-    GUI.CloseButton = CloseButton
-    GUI.OutputText = OutputText
-    GUI.OutputFrame = OutputFrame
+    self.Elements.ScreenGui = ScreenGui
+    self.Elements.InputBox = InputBox
+    self.Elements.DecompileButton = DecompileButton
+    self.Elements.CloseButton = CloseButton
+    self.Elements.OutputText = OutputText
+    self.Elements.OutputFrame = OutputFrame
     
-    return ScreenGui
+    return self.Elements
 end
 
-function GUI:SetOutput(text, color)
-    self.OutputText.Text = text
-    self.OutputText.TextColor3 = color or Color3.fromRGB(200, 200, 200)
+function UI:SetOutput(text, color)
+    self.Elements.OutputText.Text = text
+    self.Elements.OutputText.TextColor3 = color or Color3.fromRGB(200, 200, 200)
     self:UpdateOutputSize()
 end
 
-function GUI:UpdateOutputSize()
+function UI:UpdateOutputSize()
     local textSize = game:GetService("TextService"):GetTextSize(
-        self.OutputText.Text,
-        self.OutputText.TextSize,
-        self.OutputText.Font,
-        Vector2.new(self.OutputFrame.AbsoluteSize.X - 10, math.huge)
+        self.Elements.OutputText.Text,
+        self.Elements.OutputText.TextSize,
+        self.Elements.OutputText.Font,
+        Vector2.new(self.Elements.OutputFrame.AbsoluteSize.X - 10, math.huge)
     )
-    self.OutputText.Size = UDim2.new(1, -10, 0, textSize.Y + 10)
-    self.OutputFrame.CanvasSize = UDim2.new(0, 0, 0, textSize.Y + 20)
+    self.Elements.OutputText.Size = UDim2.new(1, -10, 0, textSize.Y + 10)
+    self.Elements.OutputFrame.CanvasSize = UDim2.new(0, 0, 0, textSize.Y + 20)
 end
 
-function GUI:SetupDragging(topBar, mainFrame)
+function UI:SetupDragging(topBar, mainFrame)
     local dragging = false
     local dragInput
     local dragStart
@@ -239,7 +241,7 @@ function GUI:SetupDragging(topBar, mainFrame)
     end)
 end
 
-function GUI:SetupAnimations(decompileButton, closeButton)
+function UI:SetupAnimations(decompileButton, closeButton)
     decompileButton.MouseEnter:Connect(function()
         TweenService:Create(decompileButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(180, 0, 0)}):Play()
     end)
@@ -257,4 +259,4 @@ function GUI:SetupAnimations(decompileButton, closeButton)
     end)
 end
 
-return GUI
+return UI
