@@ -3,9 +3,15 @@ local Isotopia = loadstring(game:HttpGet("https://raw.githubusercontent.com/azur
 local UI = {}
 UI.Window = nil
 UI.Elements = {}
+UI.Isotopia = Isotopia
 
 function UI:Create()
-    self.Window = Isotopia:Window({
+    if not self.Isotopia then
+        error("Isotopia library failed to load")
+        return nil
+    end
+    
+    self.Window = self.Isotopia:Window({
         Title = "Paradise Decompiler",
         Icon = "rbxassetid://107819132007001",
         Transparent = false,
@@ -146,11 +152,13 @@ function UI:Create()
         Title = "Join Discord",
         Locked = false,
         Callback = function()
-            Isotopia:Notify({
-                Title = "Discord",
-                Description = "Discord link copied to clipboard!",
-                Duration = 3
-            })
+            if self.Isotopia then
+                self.Isotopia:Notify({
+                    Title = "Discord",
+                    Description = "Discord link copied to clipboard!",
+                    Duration = 3
+                })
+            end
         end
     })
 
@@ -175,8 +183,8 @@ function UI:SetOutput(text, isError)
         })
     end
     
-    if self.Elements.ShowNotifications then
-        Isotopia:Notify({
+    if self.Elements.ShowNotifications and self.Isotopia then
+        self.Isotopia:Notify({
             Title = isError and "Error" or "Success",
             Description = isError and "Failed to decompile script" or "Script decompiled successfully!",
             Duration = 3
@@ -185,11 +193,13 @@ function UI:SetOutput(text, isError)
 end
 
 function UI:Notify(title, description, duration)
-    Isotopia:Notify({
-        Title = title,
-        Description = description,
-        Duration = duration or 3
-    })
+    if self.Isotopia then
+        self.Isotopia:Notify({
+            Title = title,
+            Description = description,
+            Duration = duration or 3
+        })
+    end
 end
 
 return UI
