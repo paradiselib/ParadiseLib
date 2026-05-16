@@ -1,4 +1,4 @@
-local uiCode = game:HttpGet("https://raw.githubusercontent.com/paradiselib/ParadiseLib/main/ui.lua")
+local uiCode = game:HttpGet("https://raw.githubusercontent.com/paradiselib/ParadiseLib/main/UI.lua")
 local createUI = loadstring(uiCode)
 if not createUI then
     error("Failed to load UI code")
