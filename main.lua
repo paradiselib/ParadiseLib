@@ -1,5 +1,8 @@
-local GUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/paradiselib/ParadiseLib/main/gui.lua"))()
-local Core = loadstring(game:HttpGet("https://raw.githubusercontent.com/paradiselib/ParadiseLib/main/core.lua"))()
+local guiCode = game:HttpGet("https://raw.githubusercontent.com/paradiselib/ParadiseLib/main/gui.lua")
+local coreCode = game:HttpGet("https://raw.githubusercontent.com/paradiselib/ParadiseLib/main/core.lua")
+
+local GUI = loadstring(guiCode)()
+local Core = loadstring(coreCode)()
 
 local Paradise = {}
 
