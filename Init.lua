@@ -72,31 +72,35 @@ end
 
 local elements = UI:Create()
 
-elements.DecompileButton.MouseButton1Click:Connect(function()
-    local scriptName = elements.InputBox.Text
+elements.OnDecompile = function()
+    local scriptName = elements.ScriptName
     
     if scriptName == "" then
-        UI:SetOutput("Error: Please enter a script name", Color3.fromRGB(255, 100, 100))
+        UI:SetOutput("Please enter a script name", true)
         return
     end
     
-    UI:SetOutput("Searching for script: " .. scriptName .. "...", Color3.fromRGB(255, 200, 100))
+    UI:Notify("Searching", "Looking for script: " .. scriptName, 2)
+    
     task.wait(0.1)
     
     local scriptInstance = FindScript(scriptName)
     
     if not scriptInstance then
-        UI:SetOutput("Error: Script '" .. scriptName .. "' not found in game", Color3.fromRGB(255, 100, 100))
+        UI:SetOutput("Script '" .. scriptName .. "' not found in game", true)
         return
     end
     
-    UI:SetOutput("Found script at: " .. scriptInstance:GetFullName() .. "\n\nDecompiling...", Color3.fromRGB(100, 255, 100))
+    UI:Notify("Found", "Script found at: " .. scriptInstance:GetFullName(), 2)
+    
     task.wait(0.2)
     
     local decompiledCode = Decompile(scriptInstance)
-    UI:SetOutput("Script: " .. scriptInstance:GetFullName() .. "\n" .. string.rep("-", 50) .. "\n\n" .. decompiledCode, Color3.fromRGB(200, 200, 200))
-end)
-
-elements.CloseButton.MouseButton1Click:Connect(function()
-    elements.ScreenGui:Destroy()
-end)
+    
+    UI:SetOutput("Script: " .. scriptInstance:GetFullName() .. "\n" .. string.rep("-", 50) .. "\n\n" .. decompiledCode, false)
+    
+    if elements.AutoCopy then
+        setclipboard(decompiledCode)
+        UI:Notify("Copied", "Code copied to clipboard!", 2)
+    end
+end
