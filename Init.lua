@@ -1,5 +1,13 @@
 local uiCode = game:HttpGet("https://raw.githubusercontent.com/paradiselib/ParadiseLib/main/ui.lua")
-local UI = loadstring(uiCode)()
+local createUI = loadstring(uiCode)
+if not createUI then
+    error("Failed to load UI code")
+end
+
+local UI = createUI()
+if not UI then
+    error("UI module returned nil")
+end
 
 local function FindScript(name)
     local function searchInInstance(instance)
