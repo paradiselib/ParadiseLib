@@ -1,4 +1,4 @@
-local UI = loadstring(game:HttpGet("https://raw.githubusercontent.com/paradiselib/ParadiseLib/main/UI.lua"))()
+local UI = loadstring(game:HttpGet("https://raw.githubusercontent.com/paradiselib/ParadiseLib/main/UI.lua?v=" .. tick()))()
 
 local function FindScript(name)
     local function searchInInstance(instance)
